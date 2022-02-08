@@ -8,20 +8,30 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PlaceholderImageService {
 
+    private string $saveDirectory;
+    private FilenameGeneratorService $generator;
     private string $placeholderServiceProvideUrl = "https://via.placeholder.com/";
     private int $minimumImageWidth = 150;
     private int $minimumImageHeight = 150;
 
     /**
+     * @param FilenameGeneratorService $generator
+     * @param string $saveDirectory
+     */
+    public function __construct(FilenameGeneratorService $generator, string $saveDirectory) {
+        $this->generator = $generator;
+        $this->saveDirectory = $saveDirectory;
+    }
+    /**
      * Return the downloaded image contents
      */
-    public function getNewImageStream (int $imageWhidth, int $imageHeight) : string {
-        if($imageWhidth < $this->minimumImageWidth || $imageHeight < $this->minimumImageHeight) {
-            throw new Error("le format n'est pas bon");
+    public function getNewImageStream (int $imageWidth, int $imageHeight) : string {
+        if($imageWidth < $this->minimumImageWidth || $imageHeight < $this->minimumImageHeight) {
+            throw new Error("le format n'est pas bon, il est trop petit");
         }
-        $contents = file_get_contents("{$this->placeholderServiceProvideUrl}/{$imageWhidth} x {$imageHeight}");
+        $contents = file_get_contents("{$this->placeholderServiceProvideUrl}/{$imageWidth} x {$imageHeight}");
         if(!$contents) {
-            throw new Error("l'image n'a pas chargé");
+            throw new \Error("l'image n'a pas chargé");
         }
         return $contents;
     }
@@ -29,8 +39,8 @@ class PlaceholderImageService {
     /**
      * Download a new placeholder image and save it into the filesystem
      */
-     public function getNewImageAndSave(int $imageWidth, int $imageHeight, string $filename): bool {
-         $file = __DIR__ . "/../../uploads/$filename";
+     public function getNewImageAndSave(int $imageWidth, int $imageHeight): bool {
+         $file = __DIR__ . "/../../uploads/" . $this->generator->getUniqFilename();
          $contents = $this->getNewImageStream($imageWidth, $imageHeight);
          $bytes = file_put_contents($file, $contents);
          return file_exists($file) && $bytes;
