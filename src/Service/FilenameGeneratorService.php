@@ -2,13 +2,15 @@
 
 namespace App\Service;
 
-class FilenameGeneratorService {
+use App\Interface\UniqIdentifierGeneratorInterface;
+
+class FilenameGeneratorService implements UniqIdentifierGeneratorInterface {
 
     /**
      * Return a fake uniq filename
      * @return string
      */
-    public function getUniqFilename(): string {
+    public function generate(): string {
         return uniqid() . "png";
     }
 }

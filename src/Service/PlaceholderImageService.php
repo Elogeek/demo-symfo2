@@ -1,7 +1,9 @@
 <?php
 namespace App\Service;
 
+use App\Interface\UniqIdentifierGeneratorInterface;
 use Doctrine\DBAL\Driver\OCI8\Exception\Error;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlaceholderImageService {
 
     private string $saveDirectory;
-    private FilenameGeneratorService $generator;
+    private UniqIdentifierGeneratorInterface $generator;
     private string $placeholderServiceProvideUrl = "https://via.placeholder.com/";
     private int $minimumImageWidth = 150;
     private int $minimumImageHeight = 150;
@@ -18,9 +20,9 @@ class PlaceholderImageService {
      * @param FilenameGeneratorService $generator
      * @param string $saveDirectory
      */
-    public function __construct(FilenameGeneratorService $generator, string $saveDirectory) {
+    public function __construct(UniqIdentifierGeneratorInterface $generator, ParameterBagInterface $container) {
         $this->generator = $generator;
-        $this->saveDirectory = $saveDirectory;
+        $this->saveDirectory = $container->get("upload.directory");
     }
     /**
      * Return the downloaded image contents
@@ -40,7 +42,7 @@ class PlaceholderImageService {
      * Download a new placeholder image and save it into the filesystem
      */
      public function getNewImageAndSave(int $imageWidth, int $imageHeight): bool {
-         $file = __DIR__ . "/../../uploads/" . $this->generator->getUniqFilename();
+         $file = $this->saveDirectory . $this->generator->generate();
          $contents = $this->getNewImageStream($imageWidth, $imageHeight);
          $bytes = file_put_contents($file, $contents);
          return file_exists($file) && $bytes;
