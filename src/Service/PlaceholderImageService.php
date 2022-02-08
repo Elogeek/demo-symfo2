@@ -3,6 +3,7 @@ namespace App\Service;
 
 use App\Interface\UniqIdentifierGeneratorInterface;
 use Doctrine\DBAL\Driver\OCI8\Exception\Error;
+use Hashids\Hashids;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -47,5 +48,6 @@ class PlaceholderImageService {
          $bytes = file_put_contents($file, $contents);
          return file_exists($file) && $bytes;
      }
+
 }
 

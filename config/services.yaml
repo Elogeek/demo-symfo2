@@ -11,6 +11,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $toto: 'je suis un test'
+            App\Interface\UniqIdentifierGeneratorInterface: '@App\Service\FilenameGenerator'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -26,3 +29,4 @@ services:
 
     App\Service\PlaceholderImageService:
         $generator: '@App\Service\FilenameGeneratorService'
+
