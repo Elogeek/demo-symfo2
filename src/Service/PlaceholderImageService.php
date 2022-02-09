@@ -16,15 +16,19 @@ class PlaceholderImageService {
     private string $placeholderServiceProvideUrl = "https://via.placeholder.com/";
     private int $minimumImageWidth = 150;
     private int $minimumImageHeight = 150;
+    private Hashids $hashids;
 
     /**
      * @param FilenameGeneratorService $generator
-     * @param string $saveDirectory
+     * @param ParameterBagInterface $container
+     * @param Hashids $hashids
      */
-    public function __construct(UniqIdentifierGeneratorInterface $generator, ParameterBagInterface $container) {
+    public function __construct(UniqIdentifierGeneratorInterface $generator, ParameterBagInterface $container,Hashids $hashids) {
         $this->generator = $generator;
         $this->saveDirectory = $container->get("upload.directory");
+        $this->hashids = $hashids;
     }
+
     /**
      * Return the downloaded image contents
      */

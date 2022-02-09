@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/articles', name: 'articles_')]
-
 class ArticleController extends AbstractController {
 
     /**

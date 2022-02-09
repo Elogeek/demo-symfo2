@@ -23,10 +23,16 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
     App\Service\PlaceholderImageService:
         $generator: '@App\Service\FilenameGeneratorService'
 
+    # Config library extern
+    Hashids\Hashids:
+
+    # Config Kernel.finish_request
+    App\EventListener\KernelFinishRequestEvent:
+        tags:
+            - { name: kernel.event-Listener, event: kernerl.finish_request }
