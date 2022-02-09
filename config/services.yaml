@@ -33,6 +33,6 @@ services:
     Hashids\Hashids:
 
     # Config Kernel.finish_request
-    App\EventListener\KernelFinishRequestEvent:
+    App\EventListener\KernelRequestEvent:
         tags:
-            - { name: kernel.event-Listener, event: kernerl.finish_request }
+            - { name: kernel.event_listener, event: kernerl.request }

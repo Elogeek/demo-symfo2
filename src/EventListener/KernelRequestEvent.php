@@ -1,24 +1,19 @@
 <?php
-namespace App\EvenListener;
+namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Class KernelFinishRequestEvent
- * @method setLocale($parentRequest)
- * @property $requestStack
+ * Class KernelRequestEvent
  */
-#[Route('/kernel', name: '-event', methods: ['POST'])]
-class KernelFinishRequestEvent {
+class KernelRequestEvent {
 
     /**
-     * @param FinishRequestEvent $event
+     * @param ExceptionEvent $event
      */
-    #[Route('/', name: '-event')]
-    public function onKernelFinishRequest(ExceptionEvent $event) {
+    public function onKernelRequest(RequestEvent $event) {
         $exception = $event->getRequest()->getRealMethod();
 
         // If the method is different from post ===> display error 403
@@ -31,10 +26,9 @@ class KernelFinishRequestEvent {
             // New response/message
             $response = new Response();
             $response->setContent("
-            <h1>Type de requête non autorisée par le kernel!</h1>
-            <p>$message</p>
-        ");
-
+                <h1>Type de requête non autorisée par le kernel!</h1>
+                <p>$message</p>
+            ");
             // Send the modified response object to the event
             $event->setResponse($response);
         }
