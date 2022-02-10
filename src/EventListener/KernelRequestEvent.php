@@ -3,7 +3,6 @@ namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * Class KernelRequestEvent
@@ -11,9 +10,10 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 class KernelRequestEvent {
 
     /**
+     * Display page error
      * @param ExceptionEvent $event
      */
-    public function onKernelRequest(RequestEvent $event) {
+    public function onKernelRequest(ExceptionEvent $event) {
         $exception = $event->getRequest()->getRealMethod();
 
         // If the method is different from post ===> display error 403
@@ -23,7 +23,7 @@ class KernelRequestEvent {
                 "403"
             );
 
-            // New response/message
+            // New response with new message
             $response = new Response();
             $response->setContent("
                 <h1>Type de requête non autorisée par le kernel!</h1>
